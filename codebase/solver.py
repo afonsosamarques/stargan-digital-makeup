@@ -7,9 +7,9 @@ import torch
 from torchvision.utils import save_image
 
 from logger import Logger
-from discriminator import Discriminator
-from drnet import DRNET
-from drunet import DRUNET
+from networks.discriminator import Discriminator
+from networks.drnet import DRNET
+from networks.drunet import DRUNET
 
 
 class Solver(object):

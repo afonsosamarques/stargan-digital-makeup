@@ -1,13 +1,15 @@
-import os
 import argparse
+import os
+
+import torch
+
+from data_utils.data_loader import get_loader
 from solver import Solver
-from data_loader import get_loader
-from torch.backends import cudnn
 
 
 def run(config):
     # For fast training
-    cudnn.benchmark = True
+    torch.backends.cudnn.benchmark = True
 
     # Create directories if not exist
     if not os.path.exists(config.log_dir):
@@ -58,11 +60,13 @@ def run(config):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
+
     #
     # High-Level configuration
     parser.add_argument('--num_workers', type=int, default=1)
     parser.add_argument('--mode', type=str, default='train')
     parser.add_argument('--use_tensorboard', type=str, default='true')
+
     #
     # Model configuration
     parser.add_argument('--generator_type', type=str, default='drnet', help='generator architecture to be used: DRUNET or DRNET')
@@ -81,6 +85,7 @@ if __name__ == '__main__':
     parser.add_argument('--lambda_cls', type=float, default=1, help='weight for domain classification loss')
     parser.add_argument('--lambda_rec', type=float, default=10, help='weight for reconstruction loss')
     parser.add_argument('--lambda_gp', type=float, default=10, help='weight for gradient penalty') 
+
     #
     # Training configuration
     parser.add_argument('--batch_size', type=int, default=8, help='mini-batch size per dataset')
@@ -101,20 +106,24 @@ if __name__ == '__main__':
     parser.add_argument('--log_step', type=int, default=1420, help='frequency for logging training results')
     parser.add_argument('--debug_step', type=int, default=28400, help='frequency for debugging during training')
     parser.add_argument('--model_ckpt_step', type=int, default=28400, help='frequency for storing model checkpoints')
+
     #
     # Testing configuration
     parser.add_argument('--nomakeup_test_set', type=int, default=56, help='size of the test set')
+
     #
     # Directory configuration
-    parser.add_argument('--nomakeup_dir', type=str, default='/homes/adm17/dmakeup-datasets/nomakeup/', help='directory for NoMakeup images')
-    parser.add_argument('--makeup_dir', type=str, default='/homes/adm17/dmakeup-datasets/makeup/', help='directory for Makeup images')
-    parser.add_argument('--makeup_att_path', type=str, default='/homes/adm17/dmakeup-datasets/selected_makeup_2.txt', help='file for Makeup labels')
-    parser.add_argument('--nomakeup_file_path', type=str, default='/homes/adm17/dmakeup-datasets/selected_nomakeup.txt', help='file for NoMakeup txt file')
-    parser.add_argument('--log_dir', type=str, default='/vol/gpudata/adm17/training_logs/', help='directory for storing training logs')
-    parser.add_argument('--model_dir', type=str, default='/vol/gpudata/adm17/model_ckpts/', help='directory for storing model checkpoints')
-    parser.add_argument('--debug_dir', type=str, default='/vol/gpudata/adm17/debug_results/', help='directory for storing debugging results')
-    parser.add_argument('--test_results_dir', type=str, default='/vol/gpudata/adm17/test_results/', help='directory for storing test results')
+    parser.add_argument('--nomakeup_dir', type=str, help='directory for NoMakeup images')
+    parser.add_argument('--makeup_dir', type=str, help='directory for Makeup images')
+    parser.add_argument('--makeup_att_path', type=str, help='file for Makeup labels')
+    parser.add_argument('--nomakeup_file_path', type=str, help='file for NoMakeup txt file')
+    parser.add_argument('--log_dir', type=str, help='directory for storing training logs')
+    parser.add_argument('--model_dir', type=str, help='directory for storing model checkpoints')
+    parser.add_argument('--debug_dir', type=str, help='directory for storing debugging results')
+    parser.add_argument('--test_results_dir', type=str, help='directory for storing test results')
 
+    #
+    # Run
     config = parser.parse_args()
-    print(config)
+    print(f"Config:\n{config}")
     run(config)

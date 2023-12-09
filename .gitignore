@@ -1,5 +1,4 @@
-datasets/*
-labels/*
+codebase/data/*
 .DS_Store
 
 # Byte-compiled / optimized / DLL files
